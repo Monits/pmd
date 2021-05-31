@@ -28,6 +28,7 @@ import net.sourceforge.pmd.util.DataMap;
 import net.sourceforge.pmd.util.DataMap.DataKey;
 import net.sourceforge.pmd.util.DataMap.SimpleDataKey;
 
+import net.sf.saxon.Configuration;
 import net.sf.saxon.expr.Expression;
 import net.sf.saxon.om.Item;
 import net.sf.saxon.om.NamePool;
@@ -70,7 +71,7 @@ public class SaxonXPathRuleQuery extends AbstractXPathRuleQuery {
 
     private static final Logger LOG = Logger.getLogger(SaxonXPathRuleQuery.class.getName());
 
-    private static final NamePool NAME_POOL = new NamePool();
+    private static final Configuration CONFIGURATION = new Configuration();
 
     /** Cache key for the wrapped tree for saxon. */
     private static final SimpleDataKey<DocumentNode> SAXON_TREE_CACHE_KEY = DataMap.simpleDataKey("saxon.tree");
@@ -199,7 +200,7 @@ public class SaxonXPathRuleQuery extends AbstractXPathRuleQuery {
         DataMap<DataKey<?, ?>> userMap = root.getUserMap();
         DocumentNode docNode = userMap.get(SAXON_TREE_CACHE_KEY);
         if (docNode == null) {
-            docNode = new DocumentNode(root, getNamePool());
+            docNode = new DocumentNode(root, getConfiguration());
             userMap.set(SAXON_TREE_CACHE_KEY, docNode);
         }
         return docNode;
@@ -234,9 +235,8 @@ public class SaxonXPathRuleQuery extends AbstractXPathRuleQuery {
             return;
         }
         try {
-            final XPathEvaluator xpathEvaluator = new XPathEvaluator();
+            final XPathEvaluator xpathEvaluator = new XPathEvaluator(CONFIGURATION);
             final XPathStaticContext xpathStaticContext = xpathEvaluator.getStaticContext();
-            xpathStaticContext.getConfiguration().setNamePool(getNamePool());
 
             // Enable XPath 1.0 compatibility
             if (XPATH_1_0_COMPATIBILITY.equals(version)) {
@@ -362,8 +362,8 @@ public class SaxonXPathRuleQuery extends AbstractXPathRuleQuery {
         initializeXPathExpression();
         return super.getRuleChainVisits();
     }
-
-    public static NamePool getNamePool() {
-        return NAME_POOL;
+    
+    public static Configuration getConfiguration() {
+        return CONFIGURATION;
     }
 }

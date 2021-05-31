@@ -14,6 +14,7 @@ import net.sourceforge.pmd.lang.ast.xpath.Attribute;
 import net.sourceforge.pmd.lang.ast.xpath.internal.AstNodeOwner;
 import net.sourceforge.pmd.lang.rule.xpath.SaxonXPathRuleQuery;
 
+import net.sf.saxon.Configuration;
 import net.sf.saxon.om.Axis;
 import net.sf.saxon.om.AxisIterator;
 import net.sf.saxon.om.DocumentInfo;
@@ -52,7 +53,7 @@ public class ElementNode extends BaseNodeInfo implements AstNodeOwner {
 
     @Deprecated
     public ElementNode(DocumentNode document, IdGenerator idGenerator, ElementNode parent, Node node, int siblingPosition) {
-        this(document, idGenerator, parent, node, siblingPosition, SaxonXPathRuleQuery.getNamePool());
+        this(document, idGenerator, parent, node, siblingPosition, SaxonXPathRuleQuery.getConfiguration());
     }
 
     public ElementNode(DocumentNode document,
@@ -60,8 +61,8 @@ public class ElementNode extends BaseNodeInfo implements AstNodeOwner {
                        ElementNode parent,
                        Node node,
                        int siblingPosition,
-                       NamePool namePool) {
-        super(Type.ELEMENT, namePool, node.getXPathNodeName(), parent);
+                       Configuration configuration) {
+        super(Type.ELEMENT, configuration, node.getXPathNodeName(), parent);
 
         this.document = document;
         this.parent = parent;
@@ -72,7 +73,7 @@ public class ElementNode extends BaseNodeInfo implements AstNodeOwner {
         if (node.getNumChildren() > 0) {
             this.children = new NodeInfo[node.getNumChildren()];
             for (int i = 0; i < children.length; i++) {
-                children[i] = new ElementNode(document, idGenerator, this, node.getChild(i), i, namePool);
+                children[i] = new ElementNode(document, idGenerator, this, node.getChild(i), i, configuration);
             }
         } else {
             this.children = null;

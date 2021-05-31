@@ -38,7 +38,7 @@ public class AttributeNode extends BaseNodeInfo {
      * @param id     The index within the attribute order
      */
     public AttributeNode(ElementNode parent, Attribute attribute, int id) {
-        super(Type.ATTRIBUTE, parent.getNamePool(), attribute.getName(), parent);
+        super(Type.ATTRIBUTE, parent.getConfiguration(), attribute.getName(), parent);
         this.attribute = attribute;
         this.id = id;
     }

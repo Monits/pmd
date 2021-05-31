@@ -126,7 +126,7 @@
                 See https://github.com/pmd/pmd/issues/1074
                 and https://github.com/pmd/pmd/pull/1201
             -->
-            <optional>true</optional>
+	    <!--<optional>true</optional>-->
         </dependency>
 
         <dependency>

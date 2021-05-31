@@ -5,6 +5,7 @@
 package net.sourceforge.pmd.lang.ast.xpath.saxon;
 
 
+import net.sf.saxon.Configuration;
 import net.sf.saxon.om.FingerprintedNode;
 import net.sf.saxon.om.NamePool;
 import net.sf.saxon.om.NodeInfo;
@@ -17,15 +18,15 @@ abstract class BaseNodeInfo extends AbstractNodeInfo implements VirtualNode, Sib
     // same getNodeKind implementation, otherwise NameTest spends a lot
     // of time in virtual dispatch
     private final int nodeKind;
-    private final NamePool namePool;
+    private final Configuration configuration;
     private final int fingerprint;
 
     protected final ElementNode parent;
 
-    BaseNodeInfo(int nodeKind, NamePool namePool, String localName, ElementNode parent) {
+    BaseNodeInfo(int nodeKind, Configuration configuration, String localName, ElementNode parent) {
         this.nodeKind = nodeKind;
-        this.namePool = namePool;
-        this.fingerprint = namePool.allocate("", "", localName) & NamePool.FP_MASK;
+        this.configuration = configuration;
+        this.fingerprint = configuration.getNamePool().allocate("", "", localName) & NamePool.FP_MASK;
         this.parent = parent;
     }
 
@@ -62,10 +63,15 @@ abstract class BaseNodeInfo extends AbstractNodeInfo implements VirtualNode, Sib
     public final int getFingerprint() {
         return fingerprint;
     }
+    
+    @Override
+    public Configuration getConfiguration() {
+        return configuration;
+    }
 
     @Override
     public final NamePool getNamePool() {
-        return namePool;
+        return configuration.getNamePool();
     }
 
     @Override

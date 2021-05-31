@@ -14,6 +14,7 @@ import net.sourceforge.pmd.lang.ast.xpath.internal.AstNodeOwner;
 import net.sourceforge.pmd.lang.ast.xpath.internal.DeprecatedAttrLogger;
 import net.sourceforge.pmd.lang.rule.xpath.SaxonXPathRuleQuery;
 
+import net.sf.saxon.Configuration;
 import net.sf.saxon.om.Axis;
 import net.sf.saxon.om.AxisIterator;
 import net.sf.saxon.om.DocumentInfo;
@@ -51,14 +52,14 @@ public class DocumentNode extends BaseNodeInfo implements DocumentInfo, AstNodeO
      *
      * @see ElementNode
      */
-    public DocumentNode(Node node, NamePool namePool) {
-        super(Type.DOCUMENT, namePool, "", null);
-        this.rootNode = new ElementNode(this, new IdGenerator(), null, node, -1, namePool);
+    public DocumentNode(Node node, Configuration configuration) {
+        super(Type.DOCUMENT, configuration, "", null);
+        this.rootNode = new ElementNode(this, new IdGenerator(), null, node, -1, configuration);
     }
 
     @Deprecated
     public DocumentNode(Node node) {
-        this(node, SaxonXPathRuleQuery.getNamePool());
+        this(node, SaxonXPathRuleQuery.getConfiguration());
     }
 
     @Override
